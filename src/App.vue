@@ -1,6 +1,6 @@
 <template>
   <SiteNavigation />
-  <router-view v-slot="{ Component }">
+  <router-view v-if="properties.hits.length > 0" v-slot="{ Component }">
     <component :is="Component" :properties="properties" :loading="loading" />
   </router-view>
   <FooterSection />
@@ -20,9 +20,9 @@ export default {
   },
   data() {
     return {
-      properties: propertyData.hits,
       // properties: [], // Initially empty
-      loading: false,
+      properties: propertyData,
+      loading: true, // Set loading to true before fetching
       apiKey: process.env.VUE_APP_API_KEY
     };
   },
@@ -39,24 +39,20 @@ export default {
     try {
       const response = await fetch(url, options);
       const data = await response.json();
-
-      // Ensure data.hits exists and is an array
-      if (data.hits && Array.isArray(data.hits)) {
+      if (data.hits) {
         this.properties = data.hits.filter((item) => item.state === "active");
       } else {
         Swal.fire({
           title: "Error!",
-          text: "Sorry, Invalid data structure received. Please try and reload the page",
+          text: "Error fetching data. Using Dummy Data at the moment.",
           icon: "error",
           confirmButtonText: "OK"
         });
       }
-
-      console.log("Fetched Properties:", this.properties);
     } catch (error) {
       Swal.fire({
         title: "Error!",
-        text: "Sorry, There was an error fetching data. Please try and reload the page",
+        text: "Error fetching data. Using Dummy Data at the moment.",
         icon: "error",
         confirmButtonText: "OK"
       });

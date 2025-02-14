@@ -1,41 +1,15 @@
 <template>
-  <section class="banner">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h1>
-            Buy, Rent or Sell Your
-            <span class="accent-color">Real Estate</span>
-            easily
-          </h1>
-          <p>
-            Find your dream home with our real estate platform—browse listings,
-            compare prices, and connect with trusted agents effortlessly.
-          </p>
-          <a href="#" @click.prevent="scrollToProperties" class="banner-btn">
-            Browse Properties
-          </a>
-        </div>
-        <div class="col-md-6 banner-img">
-          <img src="../../assets/banner-img.png" alt="" />
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="properties" id="properties">
-    <div v-if="loading">
-      <h1 class="text-center fa-2x mt-5 mb-5">Loading Properties...</h1>
-    </div>
-    <div v-else-if="activeProperties.length === 0">
-      <h1 class="text-center fa-2x mt-5 mb-5">No Active Properties Found</h1>
-    </div>
-    <div v-else class="container">
+    <div class="container">
       <h1>Property <span class="accent-color">Listings</span></h1>
       <p>Have a look at some of our property listings</p>
       <div class="row">
+        <div v-if="loading">
+          <h1 class="text-center fa-2x mt-5 mb-5">Loading Property...</h1>
+        </div>
         <PropertyCard
-          v-for="(property, index) in activeProperties"
+          v-else
+          v-for="(property, index) in properties"
           :key="index"
           :property="property"
         />
@@ -49,18 +23,17 @@ import { nextTick } from "vue";
 import PropertyCard from "../PropertyCard.vue";
 
 export default {
+  name: "PropertiesListing",
   props: {
-    properties: {
-      type: Array,
-      default: () => [] // ✅ Ensures it's always an array
-    },
+    properties: Array,
     loading: Boolean
   },
   components: {
     PropertyCard
   },
   methods: {
-    scrollToProperties() {
+    scrollToProperties(event) {
+      event.preventDefault();
       nextTick(() => {
         const section = document.getElementById("properties");
         if (section) {
@@ -69,19 +42,12 @@ export default {
       });
     }
   },
-  computed: {
-    activeProperties() {
-      return (
-        this.properties.hits?.filter(
-          (property) => property.state === "active"
-        ) || []
-      );
-    }
-  },
   mounted() {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
+    nextTick(() => {
+      const section = document.getElementById("properties");
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      }
     });
   }
 };
@@ -105,7 +71,6 @@ export default {
   color: var(--color4);
   font-size: 1em;
   margin-bottom: 3em;
-  font-weight: 500;
 }
 .banner-img img {
   width: 100%;
