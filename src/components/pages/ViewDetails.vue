@@ -93,5 +93,19 @@ export default {
 .details img {
   width: 100%;
   border-radius: 1em;
+  margin-bottom: 2em;
+}
+@media screen and (max-width: 600px) {
+  .details h1 {
+    font-size: 2em;
+  }
+  .details h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.75em !important;
+  }
+  .details h3 {
+    font-size: 0.9em;
+    margin-bottom: 0.5em !important;
+  }
 }
 </style>
