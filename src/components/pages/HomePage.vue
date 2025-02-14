@@ -27,15 +27,22 @@
     <div v-if="loading">
       <h1 class="text-center fa-2x mt-5 mb-5">Loading Properties...</h1>
     </div>
-    <div v-else-if="activeProperties.length === 0">
+    <div v-else-if="sortedProperties.length === 0">
       <h1 class="text-center fa-2x mt-5 mb-5">No Active Properties Found</h1>
     </div>
     <div v-else class="container">
       <h1>Property <span class="accent-color">Listings</span></h1>
       <p>Have a look at some of our property listings</p>
+
+      <select v-model="sortOrder" @change="sortProperties">
+        <option value="">--Sort by Price--</option>
+        <option value="high-low">Highest To Lowest</option>
+        <option value="low-high">Lowest to Highest</option>
+      </select>
+
       <div class="row">
         <PropertyCard
-          v-for="(property, index) in activeProperties"
+          v-for="(property, index) in sortedProperties"
           :key="index"
           :property="property"
         />
@@ -52,12 +59,17 @@ export default {
   props: {
     properties: {
       type: Array,
-      default: () => [] // ✅ Ensures it's always an array
+      default: () => []
     },
     loading: Boolean
   },
   components: {
     PropertyCard
+  },
+  data() {
+    return {
+      sortOrder: "" // Tracks sorting option
+    };
   },
   methods: {
     scrollToProperties() {
@@ -67,6 +79,13 @@ export default {
           section.scrollIntoView({ behavior: "smooth" });
         }
       });
+    },
+    sortProperties() {
+      if (this.sortOrder === "high-low") {
+        this.sortedProperties.sort((a, b) => b.price - a.price);
+      } else if (this.sortOrder === "low-high") {
+        this.sortedProperties.sort((a, b) => a.price - b.price);
+      }
     }
   },
   computed: {
@@ -76,6 +95,13 @@ export default {
           (property) => property.state === "active"
         ) || []
       );
+    },
+    sortedProperties() {
+      return [...this.activeProperties].sort((a, b) => {
+        if (this.sortOrder === "high-low") return b.price - a.price;
+        if (this.sortOrder === "low-high") return a.price - b.price;
+        return 0; // Default order
+      });
     }
   },
   mounted() {
@@ -138,6 +164,12 @@ export default {
   color: var(--color1) !important;
   background-color: var(--color2) !important;
   border: 2px solid var(--color1) !important;
+}
+select {
+  padding: 1em;
+  margin-bottom: 2em;
+  border: 2px solid var(--color1);
+  border-radius: 0.5em;
 }
 /* End banner section */
 
