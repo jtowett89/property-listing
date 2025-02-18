@@ -18,11 +18,9 @@
         <div class="col-md-1"></div>
         <div v-if="property" class="col-md-6">
           <h2 class="accent-color fw-bold mb-5">
-            {{ property.title || "Unnamed Property" }}
+            {{ property.title }}
           </h2>
-          <h2 class="fw-bold mb-5">
-            ${{ property.price || "Price Not Available" }}
-          </h2>
+          <h2 class="fw-bold mb-5">${{ property.price }} /month</h2>
           <h3>
             <i class="accent-color fa-solid fa-location-dot"></i>
             {{ locationNames }}
