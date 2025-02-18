@@ -12,7 +12,9 @@
         <img v-else src="../assets/default-property-img.png" alt="" />
       </router-link>
       <div class="property-card-text">
-        <h2 v-if="property.price">${{ property.price.toLocaleString() }}</h2>
+        <h2 v-if="property.price">
+          ${{ property.price.toLocaleString() }}<span>/Month</span>
+        </h2>
         <h3>{{ property.title }}</h3>
         <p>
           <i class="fa-solid fa-location-dot"></i>
@@ -93,6 +95,10 @@ export default {
   font-weight: 700;
   color: var(--color1);
   margin-bottom: 0.5em;
+}
+.property-card h2 span {
+  color: var(--color4);
+  font-size: 0.5em;
 }
 .property-card h3 {
   font-size: 1.2em;
