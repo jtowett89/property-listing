@@ -48,6 +48,7 @@ export default {
           icon: "error",
           confirmButtonText: "OK"
         });
+        console.log("The Key: " + apiKey);
       }
     } catch (error) {
       Swal.fire({
