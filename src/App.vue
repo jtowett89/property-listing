@@ -43,7 +43,6 @@ export default {
         throw new Error(`HTTP error! Status: ${response.status}`);
 
       const data = await response.json();
-      console.log("Fetched Properties:", JSON.stringify(data, null, 2));
 
       this.properties = data.hits
         ? data.hits.filter((item) => item.state === "active")
@@ -61,7 +60,7 @@ export default {
       console.error("Error fetching properties:", error);
       Swal.fire({
         title: "Error!",
-        text: "Could not fetch data. Using dummy data.",
+        text: "Could not fetch data. Please try reloading the page.",
         icon: "error",
         confirmButtonText: "OK"
       });
