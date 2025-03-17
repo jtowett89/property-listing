@@ -50,9 +50,9 @@ export default {
       console.log("Route ID:", route.params.id);
       console.log("Properties received:", props.properties);
 
-      if (props.properties.hits?.length) {
+      if (props.properties.length) {
         property.value =
-          props.properties.hits.find(
+          props.properties.find(
             (prop) => String(prop.id) === String(route.params.id)
           ) || null;
         console.log("Found Property:", property.value);
