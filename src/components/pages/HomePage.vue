@@ -91,9 +91,7 @@ export default {
   computed: {
     activeProperties() {
       return (
-        this.properties.hits?.filter(
-          (property) => property.state === "active"
-        ) || []
+        this.properties.filter((property) => property.state === "active") || []
       );
     },
     sortedProperties() {

@@ -1,6 +1,6 @@
 <template>
   <SiteNavigation />
-  <router-view v-if="properties.hits.length > 0" v-slot="{ Component }">
+  <router-view v-slot="{ Component }">
     <component :is="Component" :properties="properties" :loading="loading" />
   </router-view>
   <FooterSection />
@@ -10,7 +10,7 @@
 import Swal from "sweetalert2";
 import SiteNavigation from "./components/SiteNavigation.vue";
 import FooterSection from "./components/FooterSection.vue";
-import propertyData from "./assets/data2.json";
+// import propertyData from "./assets/data2.json";
 
 export default {
   name: "App",
@@ -20,14 +20,15 @@ export default {
   },
   data() {
     return {
-      // properties: [], // Initially empty
-      properties: propertyData,
+      properties: [], // Initially empty
+      // properties: propertyData,
       loading: true, // Set loading to true before fetching
       apiKey: process.env.VUE_APP_API_KEY
     };
   },
   async mounted() {
-    const url = `https://bayut.p.rapidapi.com/properties/list?locationExternalIDs=5002%2C6020&purpose=for-rent&hitsPerPage=25&page=0&lang=en&sort=city-level-score&rentFrequency=monthly&categoryExternalID=4`;
+    const url =
+      "https://bayut.p.rapidapi.com/properties/list?locationExternalIDs=5002%2C6020&purpose=for-rent&hitsPerPage=25&page=0&lang=en&sort=city-level-score&rentFrequency=monthly&categoryExternalID=4";
     const options = {
       method: "GET",
       headers: {
@@ -38,21 +39,29 @@ export default {
 
     try {
       const response = await fetch(url, options);
+      if (!response.ok)
+        throw new Error(`HTTP error! Status: ${response.status}`);
+
       const data = await response.json();
-      if (data.hits) {
-        this.properties = data.hits.filter((item) => item.state === "active");
-      } else {
+      console.log("Fetched Properties:", JSON.stringify(data, null, 2));
+
+      this.properties = data.hits
+        ? data.hits.filter((item) => item.state === "active")
+        : [];
+
+      if (!data.hits) {
         Swal.fire({
           title: "Error!",
-          text: "Error fetching data. Using Dummy Data at the moment.",
-          icon: "error",
+          text: "No active listings found.",
+          icon: "warning",
           confirmButtonText: "OK"
         });
       }
     } catch (error) {
+      console.error("Error fetching properties:", error);
       Swal.fire({
         title: "Error!",
-        text: "Error fetching data. Using Dummy Data at the moment.",
+        text: "Could not fetch data. Using dummy data.",
         icon: "error",
         confirmButtonText: "OK"
       });
