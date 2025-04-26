@@ -48,7 +48,7 @@ export default {
         ? data.hits.filter((item) => item.state === "active")
         : [];
 
-      if (!data.hits) {
+      if (data.hits.length === 0) {
         Swal.fire({
           title: "Error!",
           text: "No active listings found.",
